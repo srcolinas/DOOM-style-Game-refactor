@@ -253,7 +253,7 @@ sequenceDiagram
         Player-->>Game: 
 
         Game->>RayCasting: update
-        rect rgb(255, 255, 250)
+        rect rgb(255, 255, 240)
         Note over Game,RayCasting: required for the ray casting algorithm
         RayCasting->>Game: get player position in map
         Game-->>RayCasting: player.map_pos
