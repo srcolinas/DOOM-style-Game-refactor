@@ -4,7 +4,46 @@ A few weeks ago, I saw [a great tutorial on game development on youtube](https:/
 
 I will try to show the impact of several design choices made on the overal maitainability of the project, as if it was a real life software project. Hopefully, the process shown in this post will help you improve the effectiveness of your own team, by having a codebase that is easier to maintain.
 
-## Understanding the Codebase
+
+## Use most common conventions
+There are tools that will give you an initial overview of the most common bad practices used in the codebase. In particular, let's use `flake8` for this job. The fact that I want to use `flake8` just means that I am familiar with it, but it doesn't necessarily mean that I think it is better at pointing bad practices. It is very likely that any tool will give you more or less the same results and will let you ignore any convention that you want to consciously ignore.
+
+When you run `flake8 original`, you will se a huge list of errors, you can summarize them as *lines being too long* and *use of start (`*`) imports*. The first one makes it hard to read code in small screens, while the second makes it hard to keep track of where some objects are comming from. The second is particularly important when you are refactoring code, because you need to be able to quickly find when some objects are defined.
+
+While I do not think that addressing such erros makes a big difference on the overall maintainability of the codebase, I do think it is a good easy first step, so let's do it. The more you can get for free the better, so I used `isort` and `black` to do some of the work automatically; this kind of tools also help you to reduce the amount of debate you have with your colleages about the likes and dislikes, simply follow the tool and people don't have to worry.
+
+ You can see the end result in the [version one folder](./v1/). Now do `flake8 v1` to see that we do not have any issues. 
+
+## Separate the Public from the Private
+In the original implementation, you can see that every class defined a great deal of methods and attributes. We can argue whether such a number of attributes and methods is actually needed or not, but it would take us a long while, perhaps requiring to change the definition of some methods. Nonetheless, it is easy to notice that not all of the methods and attributes defined are being accessed outside of the class. For example, consider how the `RayCasting` class defines the `get_objects_to_render`, `ray_cast` and `update` methods, but only `update` is being called outside of the class. 
+
+This is dangerous for a team project (and remember that you are also in the same team as your future self), because you don't possibly have time to supervise everyones' work to tell them what methods are supposed to be used outside of a class and which don't. Moreover, it prevent's you from changing things later without being afraid that something else will break. 
+
+Within the Python community, it is common to distinguish what is supposed to be accessed and what doesn't by using underscore (`_`) before the a function or attribute. So let's follow that convention here to make the [version two of the game](./v2/).
+
+The strategy I followed to achieve this is going class by class and looking for all of their attributes in the entire codebase, if they are only found inside the class definition, then I can safely add an `_` before the name. For example, you can see that the `add_sprite` method defined in the `ObjectHandler` class is only used by the class itself by searching in your IDE for the string `.add_sprite` and then replace it with `_add_sprite`. The same strategy would let you identify what attributes and methods are not used at all in the codebase, so we may as well remove them entirely.
+
+The strategy sounds simple, but it wouldn't work in two cases:
+1. Classes with inheritance relationships, like `NPC`, `AnimatedSprite` and so on.
+2. Attributes with repeated names, like `screen` which appears in `Game` and `ObjectRenderer` (which happen to hold references to the same object).
+
+For both cases you need to be more careful and only replace with the underscore named attribute after going through all apearances of the name. I know I can replace the `screen` of `ObjectRenderer` with `_screen`, because other places in the codebase doing `.screen` are doing it from the instance of `Game`, as in `self.game.screen`. 
+
+## Add Type Annotations
+
+## Make Code Testeable
+
+## Depend Only on What is Used
+
+## Make Sure There is Only One Reason to Change an Implementation
+
+## Summary 
+
+
+## DRAFT: DO NOT READ, I just want to keep it around in case I use it for the text later.
+
+**Understanding the Codebase**
+
 Before we start making changes, we need to make sure we understand the impact of the changes we are making. Achieving a perfect understanding of a big codebase is not an easy task, but thankfully ours is not too big; when it becomes to big, try to find isolated pieces on which you can start to contribute.
 
 Understanding a codebase means being able to say:
@@ -283,35 +322,3 @@ By using these two diagrams as a reference, we can start to question how relevan
 **A note on documentation:** we find no docstrings in the codebase, likely because the author made a tutorial and that was his intention. In real life you can find yourself dealing with poorly documented code a lot of the times. One of the first great contributions you can make to the codebase is actually documenting it, it helps you make sure you understand the impact of a particular function and you can validate such newly added documentation with your colleages.
 
 Now that we have got an understanding of the codebase, we can start improving it one step at the time. It is ok if the entire codebase is not understood before an *attempt* to refactor, it is very likely that the attempt will give you more information about it.
-
-## Use most common conventions
-There are tools that will give you an initial overview of the most common bad practices used in the codebase. In particular, let's use `flake8` for this job. The fact that I want to use `flake8` just means that I am familiar with it, but it doesn't necessarily mean that I think it is better at pointing bad practices. It is very likely that any tool will give you more or less the same results and will let you ignore any convention that you want to consciously ignore.
-
-When you run `flake8 original`, you will se a huge list of errors, you can summarize them as *lines being too long* and *use of start (`*`) imports*. The first one makes it hard to read code in small screens, while the second makes it hard to keep track of where some objects are comming from. The second is particularly important when you are refactoring code, because you need to be able to quickly find when some objects are defined.
-
-While I do not think that addressing such erros makes a big difference on the overall maintainability of the codebase, I do think it is a good easy first step, so let's do it. The more you can get for free the better, so I used `isort` and `black` to do some of the work automatically; this kind of tools also help you to reduce the amount of debate you have with your colleages about the likes and dislikes, simply follow the tool and people don't have to worry.
-
- You can see the end result in the [version one folder](./v1/). Now do `flake8 v1` to see that we do not have any issues. 
-
-## Separate the Public from the Private
-In the original implementation, you can see that every class defined a great deal of methods and attributes. We can argue whether such a number of attributes and methods is actually needed or not, but it would take us a long while, perhaps requiring to change the definition of some methods. Nonetheless, it is easy to notice that not all of the methods and attributes defined are being accessed outside of the class. For example, consider how the `RayCasting` class defines the `get_objects_to_render`, `ray_cast` and `update` methods, but only `update` is being called outside of the class. 
-
-This is dangerous for a team project (and remember that you are also in the same team as your future self), because you don't possibly have time to supervise everyones' work to tell them what methods are supposed to be used outside of a class and which don't. Moreover, it prevent's you from changing things later without being afraid that something else will break. 
-
-Within the Python community, it is common to distinguish what is supposed to be accessed and what doesn't by using underscore (`_`) before the a function or attribute. So let's follow that convention here to make the [version two of the game](./v2/).
-
-The strategy I followed to achieve this is going class by class and looking for all of their attributes in the entire codebase, if they are only found inside the class definition, then I can safely add an `_` before the name. For example, you can see that the `add_sprite` method defined in the `ObjectHandler` class is only used by the class itself by searching in your IDE for the string `.add_sprite` and then replace it with `_add_sprite`.
-
-The strategy sounds simple, but it wouldn't work in two cases:
-1. Classes with inheritance relationships, like `NPC`, `AnimatedSprite` and so on.
-2. Attributes with repeated names, like `screen` which appears in `Game` and `ObjectRenderer` (which happen to hold references to the same object).
-
-For both cases you need to be more careful and only replace with the underscore named attribute after going through all apearances of the name. I know I can replace the `screen` of `ObjectRenderer` with `_screen`, because other places in the codebase doing `.screen` are doing it from the instance of `Game`, as in `self.game.screen`. 
-
-## Add Type Annotations
-
-## Make Code Testeable
-
-## Depend Only on What is Used
-
-## Make Sure There is Only One Reason to Change an Implementation
