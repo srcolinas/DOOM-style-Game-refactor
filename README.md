@@ -294,7 +294,19 @@ While I do not think that addressing such erros makes a big difference on the ov
  You can see the end result in the [version one folder](./v1/). Now do `flake8 v1` to see that we do not have any issues. 
 
 ## Separate the Public from the Private
+In the original implementation, you can see that every class defined a great deal of methods and attributes. We can argue whether such a number of attributes and methods is actually needed or not, but it would take us a long while, perhaps requiring to change the definition of some methods. Nonetheless, it is easy to notice that not all of the methods and attributes defined are being accessed outside of the class. For example, consider how the `RayCasting` class defines the `get_objects_to_render`, `ray_cast` and `update` methods, but only `update` is being called outside of the class. 
 
+This is dangerous for a team project (and remember that you are also in the same team as your future self), because you don't possibly have time to supervise everyones' work to tell them what methods are supposed to be used outside of a class and which don't. Moreover, it prevent's you from changing things later without being afraid that something else will break. 
+
+Within the Python community, it is common to distinguish what is supposed to be accessed and what doesn't by using underscore (`_`) before the a function or attribute. So let's follow that convention here to make the [version two of the game](./v2/).
+
+The strategy I followed to achieve this is going class by class and looking for all of their attributes in the entire codebase, if they are only found inside the class definition, then I can safely add an `_` before the name. For example, you can see that the `add_sprite` method defined in the `ObjectHandler` class is only used by the class itself by searching in your IDE for the string `.add_sprite` and then replace it with `_add_sprite`.
+
+The strategy sounds simple, but it wouldn't work in two cases:
+1. Classes with inheritance relationships, like `NPC`, `AnimatedSprite` and so on.
+2. Attributes with repeated names, like `screen` which appears in `Game` and `ObjectRenderer` (which happen to hold references to the same object).
+
+For both cases you need to be more careful and only replace with the underscore named attribute after going through all apearances of the name. I know I can replace the `screen` of `ObjectRenderer` with `_screen`, because other places in the codebase doing `.screen` are doing it from the instance of `Game`, as in `self.game.screen`. 
 
 ## Add Type Annotations
 
