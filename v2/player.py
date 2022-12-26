@@ -1,10 +1,19 @@
 import math
 
 import pygame as pg
-from settings import (HALF_HEIGHT, HALF_WIDTH, MOUSE_BORDER_LEFT,
-                      MOUSE_BORDER_RIGHT, MOUSE_MAX_REL, MOUSE_SENSITIVITY,
-                      PLAYER_ANGLE, PLAYER_MAX_HEALTH, PLAYER_POS,
-                      PLAYER_SIZE_SCALE, PLAYER_SPEED, WIDTH)
+from settings import (
+    HALF_HEIGHT,
+    HALF_WIDTH,
+    MOUSE_BORDER_LEFT,
+    MOUSE_BORDER_RIGHT,
+    MOUSE_MAX_REL,
+    MOUSE_SENSITIVITY,
+    PLAYER_ANGLE,
+    PLAYER_MAX_HEALTH,
+    PLAYER_POS,
+    PLAYER_SIZE_SCALE,
+    PLAYER_SPEED,
+)
 
 
 class Player:

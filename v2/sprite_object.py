@@ -3,8 +3,7 @@ import os
 from collections import deque
 
 import pygame as pg
-from settings import (DELTA_ANGLE, HALF_HEIGHT, HALF_NUM_RAYS, SCALE,
-                      SCREEN_DIST, WIDTH)
+from settings import DELTA_ANGLE, HALF_HEIGHT, HALF_NUM_RAYS, SCALE, SCREEN_DIST, WIDTH
 
 
 class SpriteObject:
