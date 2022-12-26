@@ -4,22 +4,22 @@ from collections import deque
 class PathFinding:
     def __init__(self, game):
         self.game = game
-        self.map = game.map.mini_map
-        self.ways = [-1, 0], [0, -1], [1, 0], [0, 1], [-1, -1], [1, -1], [1, 1], [-1, 1]
-        self.graph = {}
-        self.get_graph()
+        self._map = game.map.mini_map
+        self._ways = [-1, 0], [0, -1], [1, 0], [0, 1], [-1, -1], [1, -1], [1, 1], [-1, 1]
+        self._graph = {}
+        self._get_graph()
 
     def get_path(self, start, goal):
-        self.visited = self.bfs(start, goal, self.graph)
+        self._visited = self._bfs(start, goal, self._graph)
         path = [goal]
-        step = self.visited.get(goal, start)
+        step = self._visited.get(goal, start)
 
         while step and step != start:
             path.append(step)
-            step = self.visited[step]
+            step = self._visited[step]
         return path[-1]
 
-    def bfs(self, start, goal, graph):
+    def _bfs(self, start, goal, graph):
         queue = deque([start])
         visited = {start: None}
 
@@ -38,17 +38,17 @@ class PathFinding:
                     visited[next_node] = cur_node
         return visited
 
-    def get_next_nodes(self, x, y):
+    def _get_next_nodes(self, x, y):
         return [
             (x + dx, y + dy)
-            for dx, dy in self.ways
+            for dx, dy in self._ways
             if (x + dx, y + dy) not in self.game.map.world_map
         ]
 
-    def get_graph(self):
-        for y, row in enumerate(self.map):
+    def _get_graph(self):
+        for y, row in enumerate(self._map):
             for x, col in enumerate(row):
                 if not col:
-                    self.graph[(x, y)] = self.graph.get(
+                    self._graph[(x, y)] = self._graph.get(
                         (x, y), []
-                    ) + self.get_next_nodes(x, y)
+                    ) + self._get_next_nodes(x, y)
