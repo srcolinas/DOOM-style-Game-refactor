@@ -1,10 +1,20 @@
 import math
 
 import pygame as pg
-from settings import (HALF_HEIGHT, HALF_WIDTH, MOUSE_BORDER_LEFT,
-                      MOUSE_BORDER_RIGHT, MOUSE_MAX_REL, MOUSE_SENSITIVITY,
-                      PLAYER_ANGLE, PLAYER_MAX_HEALTH, PLAYER_POS,
-                      PLAYER_SIZE_SCALE, PLAYER_SPEED, WIDTH)
+from settings import (
+    HALF_HEIGHT,
+    HALF_WIDTH,
+    MOUSE_BORDER_LEFT,
+    MOUSE_BORDER_RIGHT,
+    MOUSE_MAX_REL,
+    MOUSE_SENSITIVITY,
+    PLAYER_ANGLE,
+    PLAYER_MAX_HEALTH,
+    PLAYER_POS,
+    PLAYER_SIZE_SCALE,
+    PLAYER_SPEED,
+    WIDTH,
+)
 
 
 class Player:
@@ -89,10 +99,17 @@ class Player:
             self.y += dy
 
     def draw(self):
-        pg.draw.line(self.game.screen, 'yellow', (self.x * 100, self.y * 100),
-                    (self.x * 100 + WIDTH * math.cos(self.angle),
-                     self.y * 100 + WIDTH * math. sin(self.angle)), 2)
-        pg.draw.circle(self.game.screen, 'green', (self.x * 100, self.y * 100), 15)
+        pg.draw.line(
+            self.game.screen,
+            "yellow",
+            (self.x * 100, self.y * 100),
+            (
+                self.x * 100 + WIDTH * math.cos(self.angle),
+                self.y * 100 + WIDTH * math.sin(self.angle),
+            ),
+            2,
+        )
+        pg.draw.circle(self.game.screen, "green", (self.x * 100, self.y * 100), 15)
 
     def mouse_control(self):
         mx, my = pg.mouse.get_pos()

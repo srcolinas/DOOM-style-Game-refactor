@@ -287,13 +287,14 @@ Now that we have got an understanding of the codebase, we can start improving it
 ## Use most common conventions
 There are tools that will give you an initial overview of the most common bad practices used in the codebase. In particular, let's use `flake8` for this job. The fact that I want to use `flake8` just means that I am familiar with it, but it doesn't necessarily mean that I think it is better at pointing bad practices. It is very likely that any tool will give you more or less the same results and will let you ignore any convention that you want to consciously ignore.
 
-When you run `flake8 original`, you will se a huge list of errors, you can summarize them as *lines being too long* and *use of start (`*`) imports*. The first one makes it hard to read code in small screens, while the second makes it hard to keep track of where some objects are comming from.
+When you run `flake8 original`, you will se a huge list of errors, you can summarize them as *lines being too long* and *use of start (`*`) imports*. The first one makes it hard to read code in small screens, while the second makes it hard to keep track of where some objects are comming from. The second is particularly important when you are refactoring code, because you need to be able to quickly find when some objects are defined.
 
-While I do not think that addressing such erros makes a big difference on the overall maintainability of the codebase, I do think it is a good easy first step, so let's do it. You can see the end result in the [version one folder](./v1/). Now do `flake8 v1` to see that we do not have any issues.
+While I do not think that addressing such erros makes a big difference on the overall maintainability of the codebase, I do think it is a good easy first step, so let's do it. The more you can get for free the better, so I used `isort` and `black` to do some of the work automatically; this kind of tools also help you to reduce the amount of debate you have with your colleages about the likes and dislikes, simply follow the tool and people don't have to worry.
 
-In addition to what is suggested by `flake8`, I also used `isort` to sort the imports folowing its default convention.
+ You can see the end result in the [version one folder](./v1/). Now do `flake8 v1` to see that we do not have any issues. 
 
 ## Separate the Public from the Private
+
 
 ## Add Type Annotations
 
