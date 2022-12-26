@@ -264,6 +264,7 @@ sequenceDiagram
         RayCasting-->>Game: 
 
         Game->>ObjectHandler: update
+
         ObjectHandler-->>Game: 
 
         Game->>ObjectRenderer: draw
@@ -282,6 +283,15 @@ By using these two diagrams as a reference, we can start to question how relevan
 **A note on documentation:** we find no docstrings in the codebase, likely because the author made a tutorial and that was his intention. In real life you can find yourself dealing with poorly documented code a lot of the times. One of the first great contributions you can make to the codebase is actually documenting it, it helps you make sure you understand the impact of a particular function and you can validate such newly added documentation with your colleages.
 
 Now that we have got an understanding of the codebase, we can start improving it one step at the time. It is ok if the entire codebase is not understood before an *attempt* to refactor, it is very likely that the attempt will give you more information about it.
+
+## Use most common conventions
+There are tools that will give you an initial overview of the most common bad practices used in the codebase. In particular, let's use `flake8` for this job. The fact that I want to use `flake8` just means that I am familiar with it, but it doesn't necessarily mean that I think it is better at pointing bad practices. It is very likely that any tool will give you more or less the same results and will let you ignore any convention that you want to consciously ignore.
+
+When you run `flake8 original`, you will se a huge list of errors, you can summarize them as *lines being too long* and *use of start (`*`) imports*. The first one makes it hard to read code in small screens, while the second makes it hard to keep track of where some objects are comming from.
+
+While I do not think that addressing such erros makes a big difference on the overall maintainability of the codebase, I do think it is a good easy first step, so let's do it. You can see the end result in the [version one folder](./v1/). Now do `flake8 v1` to see that we do not have any issues.
+
+In addition to what is suggested by `flake8`, I also used `isort` to sort the imports folowing its default convention.
 
 ## Separate the Public from the Private
 
