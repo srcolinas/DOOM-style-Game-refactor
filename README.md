@@ -31,6 +31,12 @@ For both cases you need to be more careful and only replace with the underscore 
 
 ## Add Type Annotations
 
+In the last few years, the python community has started to use type annotations to improve the maintainability of their code. If you are wondering how this helps, imagine going to any function in the original implementation of the game and think of what are the possible values being passed around and count how long it takes you to figure out that something is an integer or a tuple of integers; with type annotations you get to know the answer inmediatly, which certainly reduces the amount of thinking and reading you have to do of the code. 
+
+Type annotations are good to spot coding mistakes before you release your software. Imagine for example at some point you endup adding strings and integers, then a tool like `mypy`, which checks for correctness in type definitions will tell you that the addition is unsuported, instead of having a bug while playing with the application. We will use `mypy` to let us know when we should add type annotations to our code. If you do `mypy v2` you will find a great list of erros. Solving them will become [the third version of the codebase](./v3/).
+
+Have you notice that nearly everywhere an instance of `main.Game` is a parameter to other classes? This makes things a bit more complicated. If you try to import the Game class to specify `__init__(self: game: main.Game) -> None`, then mypy will say everything is ok; however, the game will stop executing due to a circular dependency between the modudles. We can't allow this, we need to do only changes that allow the code to keep runing. The way to fix this is by defining the interface of the game class and use it for the type annotation. As long as such definition is not in `main`, things should work. 
+
 ## Make Code Testeable
 
 ## Depend Only on What is Used
